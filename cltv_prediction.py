@@ -95,6 +95,7 @@ df.head()
 # Selecting UK customers
 df = df[df["Country"] =="United Kingdom"]
 
+
 ################################
 # # Preparation of Lifetime Data Structure
 ################################
@@ -132,6 +133,7 @@ cltv_df["T"] = cltv_df["T"] / 7
 # If the frequency is equal to one, this person is not a customer.
 cltv_df = cltv_df[(cltv_df['frequency'] > 1)]
 
+
 ############################
 # Establishing the BG-NBD Model (Probabilistic acquisitions models)
 ############################
@@ -156,9 +158,11 @@ cltv_df["expected_purc_1_month"] = bgf.predict(4,
                                                cltv_df['recency'],
                                                cltv_df['T'])
 
+
 #######################################
 # Establishment of GAMMA-GAMMA Model (Customer's profit per transaction)
 ########################################
+
 # add penalty coefficient to the function
 ggf = GammaGammaFitter(penalizer_coef=0.01)
 
@@ -176,6 +180,7 @@ cltv_df["expected_average_profit"] = ggf.conditional_expected_average_profit(clt
                                                                              cltv_df['monetary'])
 cltv_df.head()
 cltv_df.sort_values("expected_average_profit", ascending=False).head(20)
+
 
 #######################################
 # Calculation of CLTV with BG-NBD and GG model.
@@ -246,6 +251,7 @@ cltv = ggf.customer_lifetime_value(bgf,
                                    discount_rate=0.01)
 cltv = cltv.reset_index() # id index olmaktan çıkarıldı
 cltv_final = cltv_df.merge(cltv, on="Customer ID", how="left")
+
 
 #################################################
 # Creating Segments According to CLTV
